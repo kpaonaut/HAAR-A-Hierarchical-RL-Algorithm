@@ -1,0 +1,20 @@
+MuJoCo Pro Personal license activation key, number 50897, type 6.
+
+Issued to GuangxiangZhu <zhu-gx15@mails.tsinghua.edu.cn>.
+
+Expires March 19, 2019.
+
+This file activates MuJoCo Pro on a single computer with id:
+LINUX_N3SD8T00P20040M0011ZF028S0_144
+
+Do not modify this file. Its entire content, including the
+plain text section, is used by the activation manager.
+
+488be823f69a963ebb3de7e2c812484262a87d029e481ae6bfb44932b1265945
+d9206ded7596eb8ed2416acd1586ee36477d86afedb464ca176192643124623b
+e9c3bda0f1dd659b645111f7d198e8b306775906499c42634e78016c97a4cb32
+052938b7b68042a8c027a386891d831357eed70995b255d2d9d6c5caf5a11104
+ff4db4356f34cca610523e04829b7fba8d1657bb4b44cd162b8cf61874ee6c55
+d0d908d76477d1cf09a84c6f31a94c478c88bdf6ef8d3b8749fc3043fc615ce3
+9301e521cbf97588494e6b135af43a62f8efab338cd3af22c72f8a0ef3c19dd9
+8ddda0a94910ccb13b6f61124a2abfd77818f9b2db23459c555ee7797359d3aa

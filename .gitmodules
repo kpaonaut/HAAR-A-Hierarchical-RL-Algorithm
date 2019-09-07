@@ -1,0 +1,3 @@
+[submodule "sandbox/snn4hrl"]
+	path = sandbox/snn4hrl
+	url = https://github.com/florensacc/snn4hrl.git

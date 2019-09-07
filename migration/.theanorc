@@ -1,0 +1,4 @@
+[global]
+floatX = float32
+mode = FAST_RUN
+device = gpu
