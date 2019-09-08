@@ -355,30 +355,36 @@ class BatchPolopt(RLAlgorithm):
                     real_samples["importance_weights"] = np.ones_like(real_samples["advantages"])
                     self.optimize_policy_low(itr, real_samples)
 
-                elif self.train_low and self.train_low_with_penalty and not self.train_low_with_v_split and not self.train_low_with_v_gradient and not self.advance_auxilary_reward2:
-                    # train low with penalty as the only reward; train high with sparse reward
-                    print("training low policy with penalty only")
+                elif self.train_low_with_v_split:
+                    print("training low policy with HAAR")
                     # self.discount = self.discount_low
                     paths_low = []
                     for idx, path in enumerate(paths):
+                        last_low_step_num = len(path["env_infos"]["full_path"]["rewards"][-1])
+                        V_high = self.baseline.predict(path)
+                        diff_V = np.diff(V_high)/self.env.time_steps_agg # here we are neglecting gamma in the definition
+                        # of Advantage (gamma is close to 1), making the expression essentially the difference in V.
+                        # Using the precise definition of A will yield very similar learning curves and does not affect
+                        # the outcome of experiments.
+
+                        for i in range(len(diff_V)):
+                            # path["env_infos"]["full_path"]["rewards"][i] \
+                            #     += np.ones(len(path["env_infos"]["full_path"]["rewards"][i]))*diff_V[i]
+                            path["env_infos"]["full_path"]["rewards"][i] \
+                                = np.ones(len(path["env_infos"]["full_path"]["rewards"][i])) * diff_V[i]
+
                         path_low = dict(
                             observations=np.concatenate(path['env_infos']["full_path"]["observations"]),
                             actions=np.concatenate(path['env_infos']["full_path"]["actions"]),
                             rewards=np.concatenate(path['env_infos']["full_path"]["rewards"]),
                         )
 
-                        rewards_raw = np.concatenate(path['env_infos']["full_path"]["rewards"])
+
+                        # cancel the winning rewards for low level!
                         if np.sum(path['env_infos']["full_path"]['env_infos'][
                                       'inner_rew']) == 1:  # the episode was successful
                             # the last step should minus the reward of reaching the goal (outer reward)
-                            # env_info_low[key] was padded, so the last index is not the actual last step!
-                            last_low_step = 0
-                            for _ in range(rewards_raw.size - 1, 0, -1):
-                                if rewards_raw[_] != 0:
-                                    last_low_step = _
-                                    break
-                            rewards_raw[last_low_step] -= self.env.wrapped_env.wrapped_env.goal_rew
-                        path_low['rewards'] = rewards_raw
+                            path_low['rewards'][-1] -= self.env.wrapped_env.wrapped_env.goal_rew
 
                         # WR: trim the observation
                         path_low['observations'] = path_low['observations'][:, :self.low_policy.obs_robot_dim]
@@ -386,14 +392,10 @@ class BatchPolopt(RLAlgorithm):
                         for key in path['env_infos']["full_path"]['agent_infos']:
                             agent_info_low[key] = np.concatenate(path['env_infos']["full_path"]['agent_infos'][key])
                         path_low["agent_infos"] = agent_info_low
-
                         env_info_low = dict()
                         for key in path['env_infos']["full_path"]['env_infos']:
-                            if key == 'outer_rew':
-                                env_info_low[key] = path_low['rewards']
-                                # print('env_info reward: ', env_info_low[key])
-                            else:
-                                env_info_low[key] = np.concatenate(path['env_infos']["full_path"]["env_infos"][key])
+                            # print(key, path)
+                            env_info_low[key] = np.concatenate(path['env_infos']["full_path"]["env_infos"][key])
                         path_low["env_infos"] = env_info_low
 
                         paths_low.append(path_low)
@@ -404,6 +406,7 @@ class BatchPolopt(RLAlgorithm):
                     )
                     real_samples["importance_weights"] = np.ones_like(real_samples["advantages"])
                     self.optimize_policy_low(itr, real_samples)
+
 
                 else:
                     print('ERROR! Unknown training mode. See batch_polopt.py for details.')
