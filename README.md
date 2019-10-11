@@ -2,7 +2,7 @@
 
 Welcome to our code release of __Hierachical Reinforcement Learning with Advantage-Based Auxiliary Rewards__, accepted to NeurIPS 2019.
 
-Check out the [videos](http://bit.ly/2JxA0eN) and our [paper]().
+Check out the [videos](http://bit.ly/2JxA0eN) and our [paper](https://arxiv.org/abs/1910.04450).
 
 We adapted the code from [SNN4HRL](https://github.com/florensacc/snn4hrl) heavily, and also modified some files in rllab. For historical reasons, some folder names remain the same as in SNN4HRL.
 
